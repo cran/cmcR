@@ -1,7 +1,7 @@
 Package: cmcR
 Type: Package
 Title: An Implementation of the 'Congruent Matching Cells' Method
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: 
     c(person(given = "Joe",family = "Zemmels",role = c("aut","cre"),email = "jzemmels@iastate.edu"),
       person(given = "Heike",family = "Hofmann",email = "hofmann@iastate.edu",role = "aut"),
@@ -25,9 +25,9 @@ Suggests: knitr, rmarkdown, markdown, testthat, DT, magick, rgl, covr,
 VignetteBuilder: knitr
 Depends: R (>= 3.5.0)
 NeedsCompilation: no
-Packaged: 2020-12-11 18:14:07 UTC; jzemm
+Packaged: 2021-03-11 16:09:30 UTC; jzemm
 Author: Joe Zemmels [aut, cre],
   Heike Hofmann [aut],
   Susan VanderPlas [aut]
 Repository: CRAN
-Date/Publication: 2020-12-16 10:30:03 UTC
+Date/Publication: 2021-03-12 22:40:02 UTC
