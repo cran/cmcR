@@ -1,7 +1,7 @@
 Package: cmcR
 Type: Package
 Title: An Implementation of the 'Congruent Matching Cells' Method
-Version: 0.1.6
+Version: 0.1.8
 Authors@R: 
     c(person(given = "Joe",family = "Zemmels",role = c("aut","cre"),email = "jzemmels@iastate.edu"),
       person(given = "Heike",family = "Hofmann",email = "hofmann@iastate.edu",role = "aut"),
@@ -16,7 +16,7 @@ Description: An open-source implementation of the 'Congruent Matching Cells'
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: magrittr, x3ptools, dplyr, ggplot2, imager, purrr, zoo,
         stringr, assertthat, stats, utils, scales, ggnewscale,
         quantreg, tibble, tidyr, rlang
@@ -25,9 +25,9 @@ Suggests: knitr, rmarkdown, markdown, testthat, DT, magick, rgl, covr,
 VignetteBuilder: knitr
 Depends: R (>= 3.5.0)
 NeedsCompilation: no
-Packaged: 2021-04-05 02:17:30 UTC; jzemm
+Packaged: 2021-12-05 22:38:19 UTC; jzemm
 Author: Joe Zemmels [aut, cre],
   Heike Hofmann [aut],
   Susan VanderPlas [aut]
 Repository: CRAN
-Date/Publication: 2021-04-05 12:40:02 UTC
+Date/Publication: 2021-12-06 10:40:19 UTC
