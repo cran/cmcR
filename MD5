@@ -1,10 +1,10 @@
-65e3cc9c9e82eaedd5685dacf7c1d5d4 *DESCRIPTION
+eadcbcf1248546ce7ef35d2c596ea8f2 *DESCRIPTION
 923682c3fbd8b4dd8e4bf3d725306f9b *NAMESPACE
 bd66010ce1511ca9c0156bfedd9c3229 *R/ccfComputation.R
 2b2c5fcd98a5eabd385316a85a4e636f *R/comparison.R
 0e437a3278492a24ca56f6bfec3fff6f *R/data.R
 59ef2ca32a2a4112ae835f8345e71fd9 *R/decision.R
-0625f7639ad3676dc3e9faac48f5e302 *R/diagnosticTools.R
+9cae48f5f6c2b0238ede2cca228cc0e9 *R/diagnosticTools.R
 48162d45826b5a824cf9bc7bed58ce10 *R/firingPinCircleDetection.R
 5c30d1d5ee69807fa8d86ec6ace82bd8 *R/gaussianFilter.R
 51b14626a92b45077e011b565b744531 *R/preProcess.R
@@ -19,8 +19,8 @@ f93fad0f86f63bb14772c5560e3adfcf *inst/doc/cmcR_plotReproduction.Rmd
 329e45cc5b33d47e0788c01f855809c0 *inst/doc/decisionRuleDescription.R
 2b8ad3eecbe7d6b4ad151a72b5a26163 *inst/doc/decisionRuleDescription.Rmd
 dd26f4e8abc05b9022dc9937f3925cd5 *inst/doc/decisionRuleDescription.html
-3e058a144a8412f4aea53703503b88b6 *man/cmcPlot.Rd
-f146e9d8ed1d3fec27bbfca39a6b44a2 *man/comparison_allTogether.Rd
+59e78ba81f2a5f396503109b7c0015e0 *man/cmcPlot.Rd
+0cd618c43fc3cb2ccfb5185d2993adcb *man/comparison_allTogether.Rd
 f03b345bb0b66818e0553b92f46bc46c *man/comparison_calcPropMissing.Rd
 bff4e94137328207ecba3da326aac713 *man/comparison_cellDivision.Rd
 a89a1f6211ae0c74f9ed40b370c60a68 *man/comparison_cor.Rd

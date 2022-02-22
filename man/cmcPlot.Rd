@@ -69,7 +69,7 @@ methods for a pair of cartridge case scans
 }
 \examples{
 #Takes > 5 seconds to run
-\donttest{
+\dontrun{
 data(fadul1.1_processed,fadul1.2_processed)
 
 comparisonDF_1to2 <- purrr::map_dfr(seq(-30,30,by = 3),
