@@ -48,7 +48,7 @@ decision_originalMethod_classifyCMCs <- function(cellIndex,
                                                    abs(theta - median(theta)) <= thetaThresh &
                                                    corr >= corrThresh,"CMC","non-CMC")) %>%
     dplyr::filter(originalMethodClassif == "CMC") %>%
-    dplyr::select(cellIndex,theta,originalMethodClassif)
+    dplyr::select("cellIndex","theta","originalMethodClassif")
 
   originalMethodClassif <- comparisonFeaturesDF %>%
     dplyr::left_join(originalMethodCMCs,by = c("cellIndex","theta")) %>%
@@ -129,7 +129,7 @@ decision_highCMC_cmcThetaDistrib <- function(cellIndex,
                                                     corr >= corrThresh,
                                                   "CMC Candidate","not CMC Candidate")) %>%
     dplyr::ungroup() %>%
-    dplyr::select(cellIndex,theta,cmcThetaDistribClassif)
+    dplyr::select("cellIndex","theta","cmcThetaDistribClassif")
 
 
   cmcThetaDistribClassif <- comparisonFeaturesDF %>%
@@ -269,7 +269,7 @@ decision_highCMC_classifyCMCs <- function(cellIndex,
 
   passesHighCMCCriterion <- cmcThetaDistrib_classified %>%
     dplyr::filter(.data$thetaCMCIdentif == "High") %>%
-    dplyr::select(theta) %>%
+    dplyr::select("theta") %>%
     dplyr::distinct() %>%
     dplyr::summarise(distance = abs(max(theta) - min(theta))) %>%
     dplyr::pull(.data$distance) %>%
@@ -281,7 +281,7 @@ decision_highCMC_classifyCMCs <- function(cellIndex,
       dplyr::group_by(cellIndex) %>%
       dplyr::filter(highCMCClassif == "CMC") %>%
       dplyr::filter(corr == max(corr)) %>%
-      dplyr::select(c(cellIndex,theta,highCMCClassif))
+      dplyr::select("cellIndex","theta","highCMCClassif")
 
     highCMCClassif <- comparisonFeaturesDF %>%
       dplyr::left_join(highCMCs,by = c("cellIndex","theta")) %>%
@@ -296,6 +296,83 @@ decision_highCMC_classifyCMCs <- function(cellIndex,
 
   return(highCMCClassif)
 }
+
+#TODO: incorporate this into the decision_CMC function
+# the convergence CMC method of Chen et al. (2017)
+# decision_convergence <- function(cellIndex,
+#                                  x,
+#                                  y,
+#                                  theta,
+#                                  corr,
+#                                  direction,
+#                                  translationThresh = 25,
+#                                  thetaThresh = 3,
+#                                  corrThresh = .4){
+#
+#   comparisonFeaturesDF <- data.frame(cellIndex = cellIndex,
+#                                      x = x,
+#                                      y = y,
+#                                      theta = theta,
+#                                      corr = corr,
+#                                      direction = direction)
+#
+#   convergenceIndicators <- comparisonFeaturesDF %>%
+#     dplyr::group_by(.data$theta,.data$direction) %>%
+#     dplyr::mutate(distanceToMed = sqrt((.data$x - median(.data$x))^2 + (.data$y - median(.data$y))^2)) %>%
+#     dplyr::summarise(distanceToMed = median(.data$distanceToMed)) %>%
+#     dplyr::ungroup() %>%
+#     dplyr::group_by(.data$direction) %>%
+#     dplyr::group_split() %>%
+#     purrr::map_dfr(~ {
+#       data.frame(direction = unique(.$direction),
+#                  theta = unique(.$theta[which(.$distanceToMed == min(.$distanceToMed))]),
+#                  distanceToMed = min(.$distanceToMed))
+#     })
+#
+#   thetaDistanceInd <- convergenceIndicators %>%
+#     dplyr::pull(.data$theta) %>%
+#     abs() %>%
+#     diff() %>%
+#     abs() %>%
+#     magrittr::is_weakly_less_than(thetaThresh)
+#
+#   distanceToMedInd <- convergenceIndicators %>%
+#     dplyr::pull(.data$distanceToMed) %>%
+#     magrittr::is_weakly_less_than(translationThresh)
+#
+#   convergenceInd <- thetaDistanceInd & all(distanceToMedInd)
+#
+#   if(!convergenceInd){
+#     return("non-CMC (failed)")
+#   }
+#
+#   thetaRefs <- comparisonFeaturesDF %>%
+#     dplyr::group_by(.data$cellIndex,.data$direction) %>%
+#     dplyr::filter(corr == max(.data$corr)) %>%
+#     dplyr::ungroup() %>%
+#     dplyr::group_by(.data$direction) %>%
+#     dplyr::summarise(thetaRef = median(.data$theta))
+#
+#
+#   convergenceCMCs <- comparisonFeaturesDF %>%
+#     dplyr::left_join(thetaRefs,
+#                      by = c("direction")) %>%
+#     dplyr::group_by(.data$direction)  %>%
+#     dplyr::filter(.data$theta >= .data$thetaRef - thetaThresh & .data$theta <= .data$thetaRef + thetaThresh &
+#                     abs(.data$x - median(.data$x)) <= translationThresh &
+#                     abs(.data$y - median(.data$y)) <= translationThresh) %>%
+#     dplyr::filter(.data$corr >= corrThresh) %>%
+#     dplyr::ungroup() %>%
+#     dplyr::group_by(.data$direction,.data$cellIndex) %>%
+#     dplyr::filter(.data$corr == max(.data$corr)) %>%
+#     dplyr::mutate(convergenceCMCClassif = "CMC")
+#
+#   comparisonFeaturesDF %>%
+#     dplyr::left_join(convergenceCMCs,
+#                      by = c("cellIndex","x","y","corr","theta","direction")) %>%
+#     dplyr::mutate(convergenceCMCClassif = ifelse(is.na(.data$convergenceCMCClassif),"non-CMC",.data$convergenceCMCClassif)) %>%
+#     dplyr::pull(.data$convergenceCMCClassif)
+# }
 
 #'Applies the decision rules of the original method of Song (2013) or the High
 #'CMC method of Tong et al. (2015)
@@ -571,12 +648,12 @@ cmcFilter_improved <- function(reference_v_target_CMCs,
 
   originalCMCs_reference_v_target <- reference_v_target_CMCs %>%
     dplyr::filter(.data$originalMethodClassif == "CMC") %>%
-    dplyr::select(-c(.data$originalMethodClassif,.data$highCMCClassif)) %>%
+    dplyr::select(-c("originalMethodClassif","highCMCClassif")) %>%
     dplyr::mutate(direction = "reference_v_target")
 
   originalCMCs_target_v_reference <- target_v_reference_CMCs %>%
     dplyr::filter(.data$originalMethodClassif == "CMC") %>%
-    dplyr::select(-c(.data$originalMethodClassif,.data$highCMCClassif)) %>%
+    dplyr::select(-c("originalMethodClassif","highCMCClassif")) %>%
     dplyr::mutate(direction = "target_v_reference")
 
   smallerDirection <- which.min(c(nrow(originalCMCs_reference_v_target),nrow(originalCMCs_target_v_reference)))
@@ -662,7 +739,7 @@ cmcFilter_improved <- function(reference_v_target_CMCs,
         dplyr::group_by(.data$cellIndex) %>% #we don't want a cell being double-counted between the two comparisons
         dplyr::filter((!!as.name(corColName)) == max((!!as.name(corColName)))) %>%
         dplyr::ungroup() %>%
-        dplyr::select(-c(.data$originalMethodClassif,.data$highCMCClassif))
+        dplyr::select(-c("originalMethodClassif","highCMCClassif"))
 
       #we want to make sure that the modal theta value in one direction is the
       #opposite (or close to the opposite) of the modal theta value in the other
@@ -760,7 +837,7 @@ cmcFilter_improved <- function(reference_v_target_CMCs,
         }
       }
 
-      sign(thetaMax$reference_v_target) == sign(thetaMax$target_v_reference) & abs(thetaMax$reference_v_target - -1*thetaMax$target_v_reference) > thetaThresh
+      # sign(thetaMax$reference_v_target) == sign(thetaMax$target_v_reference) & abs(thetaMax$reference_v_target - -1*thetaMax$target_v_reference) > thetaThresh
 
       if((sign(thetaMax_dismissed[1,"theta"]) == sign(thetaMax_dismissed[2,"theta"]) & sign(thetaMax_dismissed[1,"theta"]) != 0 & sign(thetaMax_dismissed[2,"theta"]) != 0) |
          (abs((abs(thetaMax_dismissed[1,"theta"]) - abs(thetaMax_dismissed[2,"theta"]))) > thetaThresh)){
@@ -849,7 +926,7 @@ cmcFilter_improved <- function(reference_v_target_CMCs,
       dplyr::group_by(.data$cellIndex) %>% #we don't want a cell being double-counted between the two comparisons
       dplyr::filter((!!as.name(corColName)) == max((!!as.name(corColName)), na.rm = TRUE)) %>%
       dplyr::ungroup() %>%
-      dplyr::select(-c(.data$originalMethodClassif,.data$highCMCClassif))
+      dplyr::select(-c("originalMethodClassif","highCMCClassif"))
 
     return(list("originalMethodCMCs" = originalMethodCMCs,
                 "highCMCs" = highCMCs))
